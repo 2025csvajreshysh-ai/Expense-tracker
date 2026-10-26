@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#080f28">
+  <title>Spendly — Expense &amp; Budget Tracker</title>
+  <!-- <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet"> -->
+  <link rel="stylesheet" href="/static/styles.css">
+</head>
+
+<body>
+  <div class="app-shell">
+    <aside class="sidebar" id="sidebar">
+      <a class="brand" href="#dashboard" aria-label="Spendly dashboard"><span
+          class="brand-mark">S</span><span>Spendly</span>
+      </a>
+      <nav class="nav-list" aria-label="Main navigation">
+        <a href="#dashboard" data-view="dashboard" class="nav-link active">
+          <span class="nav-icon">◫</span>
+          Dashboard
+        </a>
+        <a href="#expenses" data-view="expenses" class="nav-link">
+          <span class="nav-icon">↗</span>
+          Expenses
+        </a>
+        <a href="#add" data-view="add" class="nav-link"><span class="nav-icon">＋</span>Add Expense</a>
+        <a href="#categories" data-view="categories" class="nav-link"><span class="nav-icon">▦</span>Categories</a>
+        <a href="#budgets" data-view="budgets" class="nav-link"><span class="nav-icon">◎</span>Budgets</a>
+        <a href="#reports" data-view="reports" class="nav-link"><span class="nav-icon">▥</span>Reports</a>
+      </nav>
+      <div class="sidebar-bottom"><label class="theme-toggle"><input id="theme-toggle" type="checkbox"><span
+            class="toggle-track"><span></span></span><span>Dark</span></label><span class="version">v1.0</span></div>
+    </aside>
+    <main class="main-area">
+      <header class="topbar">
+        <button class="mobile-menu icon-button" id="mobile-menu" aria-label="Open menu">☰</button>
+        <label class="search-wrap"><span aria-hidden="true">⌕</span><input id="global-search" type="search"
+            placeholder="Search title, category or notes…" autocomplete="off"></label>
+        <button class="button button-quiet quick-add" data-go="add"><span>＋</span> Quick Add</button>
+        <div class="account-area" id="account-area" hidden><span id="account-name"></span><button class="button button-quiet" id="logout-button" type="button">Log out</button></div>
+      </header>
+      <div id="notice" class="notice" role="status" aria-live="polite"></div>
+      <section id="view" class="view" aria-live="polite"></section>
+      <footer class="footer">Made with care <span>•</span> Spendly UI</footer>
+    </main>
+  </div>
+  <section class="login-screen" id="login-screen" aria-labelledby="login-title" hidden>
+    <div class="login-card">
+      <span class="brand-mark login-mark">S</span>
+      <p class="page-kicker">Spendly · Personal finance</p>
+      <h1 id="login-title">Welcome to Spendly</h1>
+      <p>Sign in to explore your personal finance dashboard.</p>
+      <form id="demo-login-form">
+        <label for="demo-name">Your name</label>
+        <input class="field" id="demo-name" name="name" maxlength="40" required value="Alex Morgan" autocomplete="name">
+        <button class="button button-primary" type="submit">Continue with demo</button>
+      </form>
+      <small>Demo login · No password required</small>
+    </div>
+  </section>
+  <div id="modal-root"></div>
+  <template id="page-header-template">
+    <div class="page-heading">
+      <div>
+        <p class="page-kicker">Spendly · Personal finance</p>
+        <h1 data-title></h1>
+        <p data-description></p>
+      </div>
+      <div data-action></div>
+    </div>
+  </template>
+  <template id="expense-form-template">
+    <section class="panel form-card">
+      <form id="expense-form">
+        <div class="form-grid">
+          <div class="form-field"><label for="expense-title">Title</label><input class="field" id="expense-title"
+              name="title" maxlength="100" required placeholder="e.g. Weekly groceries"></div>
+          <div class="form-field"><label for="expense-amount">Amount (₹)</label><input class="field" id="expense-amount"
+              name="amount" type="number" min="0.01" step="0.01" required placeholder="0.00"></div>
+          <div class="form-field"><label for="expense-category">Category</label><select class="select-field"
+              id="expense-category" name="category" required></select></div>
+          <div class="form-field"><label for="expense-date">Date</label><input class="date-field" id="expense-date"
+              name="date" type="date" required></div>
+          <div class="form-field full"><label for="expense-notes">Notes <span
+                class="panel-note">(optional)</span></label><textarea class="textarea-field" id="expense-notes"
+              name="notes" maxlength="500" placeholder="Add a little context…"></textarea></div>
+        </div>
+        <div class="form-actions"><button class="button" type="button" data-go="expenses">Cancel</button><button
+            class="button button-primary" type="submit" data-save-label></button></div>
+      </form>
+    </section>
+  </template>
+  <template id="dashboard-template">
+    <div class="dashboard-grid">
+      <div class="metric-stack" data-metrics></div>
+      <section class="panel chart-panel">
+        <div class="panel-heading">
+          <h2>Spending overview</h2><span class="panel-note" data-dashboard-total></span>
+        </div>
+        <div data-dashboard-donut></div>
+      </section>
+      <section class="panel trend-panel">
+        <div class="panel-heading">
+          <h2>Monthly trend</h2><span class="panel-note">Last 12 months</span>
+        </div>
+        <div class="chart-area" data-dashboard-trend></div>
+      </section>
+      <section class="panel table-panel" style="grid-column:1/-1">
+        <div class="panel-heading">
+          <h2>Recent expenses</h2><a class="panel-note" href="#expenses">View all →</a>
+        </div>
+        <div data-recent-expenses></div>
+      </section>
+    </div>
+  </template>
+  <template id="expenses-template">
+    <div class="toolbar">
+      <select id="filter-category" class="select-field">
+        <option value="">All categories</option>
+      </select>
+      <input id="filter-start" class="date-field" type="date" aria-label="From date">
+      <input id="filter-end" class="date-field" type="date" aria-label="To date">
+      <button class="button" data-action="filter">Filter</button><button class="button button-quiet"
+        data-action="clear-filters">Clear</button>
+    </div>
+    <section class="panel table-panel" data-expense-table></section>
+  </template>
+  <template id="categories-template">
+    <section class="panel">
+      <div class="category-grid" data-category-grid></div>
+      <form id="category-form" class="add-inline"><input class="field" name="name" maxlength="40" required
+          placeholder="New category name"><button class="button button-primary" type="submit">Add category</button>
+      </form>
+    </section>
+  </template>
+  <template id="budget-template">
+    <section class="panel">
+      <div class="panel-heading">
+        <h2>Monthly budgets</h2><span class="panel-note" data-budget-total></span>
+      </div>
+      <div class="budget-list" data-budget-list></div>
+    </section>
+  </template>
+  <template id="reports-template">
+    <div class="report-layout">
+      <section class="panel report-donut">
+        <div class="panel-heading">
+          <h2>Category breakdown</h2><span class="panel-note" data-report-total></span>
+        </div>
+        <div data-report-donut></div>
+      </section>
+      <section class="panel">
+        <div class="panel-heading">
+          <h2>Monthly expenses</h2><span class="panel-note">Last 12 months</span>
+        </div>
+        <div class="report-bars" data-report-bars></div>
+      </section>
+    </div>
+  </template>
+  <script src="/static/app.js" defer></script>
+</body>
+
+</html>
