@@ -294,28 +294,87 @@ button {
     display: grid;
     place-items: center;
     padding: 22px;
-    background: radial-gradient(ellipse at 50% 25%, #172447, #070e27 65%)
+    background: radial-gradient(ellipse at 50% 25%, #172447, #070e27 65%);
+    backdrop-filter: blur(8px);
 }
 
 .login-screen[hidden] { display: none }
 
 .login-card {
-    width: min(420px, 100%);
+    width: min(440px, 100%);
     padding: 34px;
     border: 1px solid #26364a;
     border-radius: 18px;
     background: linear-gradient(145deg, #111d2d, #0b132a);
-    box-shadow: var(--shadow)
+    box-shadow: 0 25px 65px rgba(2, 7, 20, 0.7);
 }
 
-.login-mark { margin-bottom: 22px }
-.login-card h1 { margin: 0 0 8px; font-size: 27px }
-.login-card > p:not(.page-kicker) { margin: 0 0 24px; color: var(--muted) }
-.login-card form { display: grid; gap: 10px }
+.login-mark { margin-bottom: 20px }
+.login-card h1 { margin: 0 0 6px; font-size: 26px; font-weight: 700 }
+.login-card > p:not(.page-kicker) { margin: 0 0 20px; color: var(--muted); font-size: 14px }
+
+.auth-tabs {
+    display: flex;
+    gap: 8px;
+    background: #091322;
+    padding: 4px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #1a293f;
+}
+
+.auth-tab {
+    flex: 1;
+    border: none;
+    background: transparent;
+    color: var(--muted);
+    font-size: 14px;
+    font-weight: 600;
+    padding: 9px 12px;
+    border-radius: 7px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.auth-tab.active {
+    background: #19273c;
+    color: #ffffff;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
+}
+
+.login-card form { display: grid; gap: 12px }
 .login-card form label { color: #a7b7ca; font-size: 13px; font-weight: 600 }
-.login-card form .field { min-height: 44px; border-radius: 8px }
-.login-card form .button { margin-top: 5px; min-height: 44px }
-.login-card small { display: block; margin-top: 17px; color: var(--dim); text-align: center }
+.login-card form .field { min-height: 44px; border-radius: 8px; width: 100% }
+.login-card form .button { margin-top: 8px; min-height: 44px; width: 100%; font-weight: 600 }
+
+.auth-error {
+    background: rgba(241, 92, 114, 0.15);
+    border: 1px solid rgba(241, 92, 114, 0.4);
+    color: #ff94a4;
+    padding: 10px 14px;
+    border-radius: 8px;
+    font-size: 13px;
+    margin-bottom: 14px;
+    display: none;
+}
+.auth-error.show { display: block }
+
+.auth-switch-text {
+    display: block;
+    margin-top: 18px;
+    color: var(--dim);
+    text-align: center;
+    font-size: 13px;
+}
+.auth-switch-text a {
+    color: var(--mint);
+    text-decoration: none;
+    font-weight: 600;
+    cursor: pointer;
+}
+.auth-switch-text a:hover {
+    text-decoration: underline;
+}
 
 .quick-add span {
     color: var(--mint);
