@@ -17,6 +17,9 @@ class Category(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
     name: str = Field(index=True, unique=True, min_length=1, max_length=40)
 
+class CategoryInput(SQLModel):
+    name: str = Field(min_length=1, max_length=40)
+
 
 class Expense(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
@@ -26,23 +29,18 @@ class Expense(SQLModel, table=True):
     date: Date = Field(index=True)
     notes: str = Field(default="", max_length=500)
 
-
-class Budget(SQLModel, table=True):
-    id: Optional[int] = Field(default=None, primary_key=True)
-    category: str = Field(index=True, unique=True, max_length=40)
-    amount: float = Field(gt=0)
-
-
-class CategoryInput(SQLModel):
-    name: str = Field(min_length=1, max_length=40)
-
-
 class ExpenseInput(SQLModel):
     title: str = Field(min_length=1, max_length=100)
     amount: float = Field(gt=0)
     category: str = Field(min_length=1, max_length=40)
     date: Date
     notes: str = Field(default="", max_length=500)
+
+
+class Budget(SQLModel, table=True):
+    id: Optional[int] = Field(default=None, primary_key=True)
+    category: str = Field(index=True, unique=True, max_length=40)
+    amount: float = Field(gt=0)
 
 
 class BudgetInput(SQLModel):
